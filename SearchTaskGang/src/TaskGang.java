@@ -110,7 +110,7 @@ public abstract class TaskGang<E> implements Runnable {
      * conjunction with a one-shop or cyclic barrier to wait for all
      * the other tasks to complete their current cycle.  It's passed
      * the index of the work that's done.  Returns true if the wait
-     * was successfuly or throws the IndexOutOfBoundsException if the
+     * was successfully or throws the IndexOutOfBoundsException if the
      * item has been removed.
      */
     protected void taskDone(int index) throws IndexOutOfBoundsException {
@@ -125,19 +125,20 @@ public abstract class TaskGang<E> implements Runnable {
     protected abstract boolean processInput(E inputData);
 
     /**
-     * Template method that creates/runs all the tasks in the gang.
+     * Template method that creates/executes all the tasks in the
+     * gang.
      */
     @Override
     public void run() {
         // Invoke hook method to get initial List of input data to
         // process.
-        setInput (getNextInput());
+        if (setInput(getNextInput()) != null) {
+            // Invoke hook method to initialize the gang of tasks.
+            initiateTaskGang(getInput().size());
 
-        // Invoke method to initialize the gang of tasks.
-        initiateTaskGang(getInput().size());
-
-        // Invoke hook method to wait for all the tasks to exit.
-        awaitTasksDone();
+            // Invoke hook method to wait for all the tasks to exit.
+            awaitTasksDone();
+        }            
     }
 
     /**

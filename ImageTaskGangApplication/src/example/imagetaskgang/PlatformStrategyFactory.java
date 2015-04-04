@@ -1,4 +1,4 @@
-package example.pingpong;
+package example.imagetaskgang;
 
 import java.util.HashMap;
 
